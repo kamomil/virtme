@@ -51,6 +51,8 @@ def make_parser() -> argparse.ArgumentParser:
     g.add_argument('--mods', action='store', choices=['none', 'use', 'auto'], default='use',
                    help='Setup loadable kernel modules inside a compiled kernel source directory (used in conjunction with --kdir); none: ignore kernel modules, use: asks user to refresh virtme\'s kernel modules directory, auto: automatically refreshes virtme\'s kernel modules directory')
 
+    g.add_argument('--moddir', action='store',
+            help='give your own moddir, it should come with --mods=none')
     g.add_argument('-a', '--kopt', action='append', default=[],
                    help='Add a kernel option.  You can specify this more than once.')
 
@@ -223,6 +225,8 @@ def find_kernel_and_mods(arch, args) -> Kernel:
         else:
             arg_fail("invalid argument '%s', please use --mods=none|use|auto" % args.mods)
 
+        if args.moddir:
+            kernel.moddir = os.path.join(args.moddir, "lib/modules", kver)
         dtb_path = arch.dtb_path()
         if dtb_path is None:
             kernel.dtb = None
