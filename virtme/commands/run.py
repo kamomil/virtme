@@ -185,7 +185,9 @@ def find_kernel_and_mods(arch, args) -> Kernel:
         kernel.load_config(args.kdir)
 
         # Kernel modules support
-        kver = None
+        release_file = os.path.join(args.kdir, 'include/config/kernel.release')
+        kver = open(release_file, 'r').read().replace('\n', '')
+
         kernel.moddir = None
         kernel.modfiles = []
 
